@@ -18,3 +18,39 @@ colorlog>=6.0              # Colored terminal output
 
 # Optional: Data export
 pandas>=2.0                # Results analysis (optional)
+
+# === Web API Dependencies ===
+
+# FastAPI Framework
+fastapi>=0.109.0           # Modern async web framework
+uvicorn[standard]>=0.27.0  # ASGI server
+pydantic>=2.0              # Data validation
+pydantic-settings>=2.0     # Settings management
+
+# Database
+sqlalchemy[asyncio]>=2.0   # Async ORM
+aiosqlite>=0.19.0          # SQLite async driver
+asyncpg>=0.29.0            # PostgreSQL async driver (production)
+alembic>=1.13.0            # Database migrations
+
+# Authentication & Security
+passlib[bcrypt]>=1.7.4     # Password hashing
+pyjwt>=2.8.0               # JWT tokens
+cryptography>=42.0         # Fernet encryption
+
+# Task Queue
+celery[redis]>=5.3.0       # Background job processing
+redis>=5.0                 # Redis client
+
+# HTTP Client
+httpx>=0.26.0              # Async HTTP client
+
+# HTML Parsing
+beautifulsoup4>=4.12.0     # DOM parsing for watchlist scraping
+lxml>=5.0.0                # Fast HTML parser
+
+# WebSocket
+websockets>=12.0           # WebSocket support
+
+# CORS
+python-multipart>=0.0.9    # Form data/file uploads

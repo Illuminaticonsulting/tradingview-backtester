@@ -1,0 +1,122 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: backtester-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-backtester}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB:-backtester}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-backtester}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backtester-net
+
+  # Redis for Celery
+  redis:
+    image: redis:7-alpine
+    container_name: backtester-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - backtester-net
+
+  # FastAPI Backend
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backtester-api
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      BACKTESTER_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-backtester}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-backtester}
+      BACKTESTER_REDIS_URL: redis://redis:6379/0
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backtester-net
+
+  # Celery Worker
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    container_name: backtester-worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      BACKTESTER_DATABASE_URL: postgresql+asyncpg://${POSTGRES_USER:-backtester}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-backtester}
+      BACKTESTER_REDIS_URL: redis://redis:6379/0
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - backtester-net
+
+  # Next.js Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: backtester-frontend
+    restart: unless-stopped
+    environment:
+      NEXT_PUBLIC_API_URL: http://api:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+    networks:
+      - backtester-net
+
+  # Nginx Reverse Proxy
+  nginx:
+    image: nginx:alpine
+    container_name: backtester-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - certbot_data:/var/www/certbot
+    depends_on:
+      - api
+      - frontend
+    networks:
+      - backtester-net
+
+volumes:
+  postgres_data:
+  redis_data:
+  certbot_data:
+
+networks:
+  backtester-net:
+    driver: bridge
