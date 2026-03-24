@@ -88,7 +88,11 @@ export default function JobDetailPage() {
   };
 
   const connectWebSocket = () => {
-    const wsUrl = `${process.env.NEXT_PUBLIC_API_URL?.replace("http", "ws") || "ws://localhost:8000"}/api/jobs/${jobId}/ws`;
+    // Use current window location for WebSocket URL when API_URL is empty (production)
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+    const wsUrl = apiUrl 
+      ? `${apiUrl.replace("http", "ws")}/api/jobs/${jobId}/ws`
+      : `${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/api/jobs/${jobId}/ws`;
     
     const ws = new WebSocket(wsUrl);
     

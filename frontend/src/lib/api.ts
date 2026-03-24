@@ -2,7 +2,8 @@
  * API Client for the TradingView Backtester API
  */
 
-const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+// Empty string means use relative URL (same domain via nginx proxy)
+const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 interface TokenResponse {
   access_token: string;

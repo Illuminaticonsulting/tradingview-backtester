@@ -86,7 +86,7 @@ services:
     container_name: backtester-frontend
     restart: unless-stopped
     environment:
-      NEXT_PUBLIC_API_URL: http://api:8000
+      NEXT_PUBLIC_API_URL: ""
     ports:
       - "3000:3000"
     depends_on:
