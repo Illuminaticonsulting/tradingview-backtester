@@ -35,7 +35,7 @@ asyncpg>=0.29.0            # PostgreSQL async driver (production)
 alembic>=1.13.0            # Database migrations
 
 # Authentication & Security
-passlib[bcrypt]>=1.7.4     # Password hashing
+bcrypt>=4.0.0  # Password hashing
 pyjwt>=2.8.0               # JWT tokens
 cryptography>=42.0         # Fernet encryption
 
