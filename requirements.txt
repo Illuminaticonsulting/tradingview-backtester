@@ -1,0 +1,20 @@
+# TradingView AI Backtester Dependencies
+
+# AI Providers
+anthropic>=0.18.0          # Claude API
+openai>=1.12.0             # DeepSeek uses OpenAI-compatible API
+
+# Browser Automation
+playwright>=1.40.0         # TradingView automation
+
+# Configuration
+pyyaml>=6.0                # Config file parsing
+
+# CLI and Utilities
+argparse                   # Command line parsing (stdlib)
+
+# Optional: Enhanced logging
+colorlog>=6.0              # Colored terminal output
+
+# Optional: Data export
+pandas>=2.0                # Results analysis (optional)

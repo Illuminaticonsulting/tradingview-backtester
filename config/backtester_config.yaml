@@ -1,0 +1,106 @@
+# TradingView AI Backtester Configuration
+# =========================================
+
+# AI Provider Configuration
+# Choose: "claude" or "deepseek"
+ai_provider: "claude"
+
+# Claude API (Anthropic)
+claude:
+  api_key: "${ANTHROPIC_API_KEY}"  # Set via environment variable
+  # Models (cheapest to most capable):
+  # - claude-3-haiku-20240307 (fastest, cheapest - good for iteration)
+  # - claude-3-5-sonnet-20241022 (balanced - recommended)
+  # - claude-sonnet-4-20250514 (most capable)
+  model: "claude-3-5-sonnet-20241022"
+  max_tokens: 4096
+  temperature: 0.7
+
+# DeepSeek R1 API
+deepseek:
+  api_key: "${DEEPSEEK_API_KEY}"  # Set via environment variable
+  base_url: "https://api.deepseek.com/v1"
+  model: "deepseek-reasoner"  # DeepSeek R1
+  max_tokens: 8192
+  temperature: 0.6
+
+# TradingView Configuration
+tradingview:
+  # Browser settings
+  headless: false  # Set true for server deployment
+  browser_timeout: 60000
+  page_load_timeout: 30000
+  
+  # Authentication (optional - for saving charts)
+  username: ""
+  password: ""
+  
+  # Chart settings
+  default_timeframe: "15"  # minutes
+  default_exchange: "BYBIT"
+  
+# Symbols to backtest
+symbols:
+  - "BYBIT:BTCUSDT.P"
+  - "BYBIT:ETHUSDT.P"
+  - "BYBIT:XRPUSDT.P"
+  - "BYBIT:SOLUSDT.P"
+  - "BYBIT:BCHUSDT.P"
+  - "BYBIT:UNIUSDT.P"
+  - "BYBIT:XMRUSDT.P"
+  - "BYBIT:HYPEUSDT.P"
+  - "BYBIT:FARTCOINUSDT.P"
+  - "BYBIT:VIRTUALUSDT.P"
+  - "BYBIT:IPUSDT.P"
+  - "BYBIT:TAOUSDT.P"
+  - "BYBIT:CRVUSDT.P"
+  - "BYBIT:ASTERUSDT.P"
+  - "OANDA:XAUUSD"
+  - "MEXC:SILVERUSDT"
+
+# Strategy Generation Settings
+strategy_generation:
+  # Target metrics for generated strategies
+  min_win_rate: 45.0
+  min_profit_factor: 1.3
+  max_drawdown: 25.0
+  min_trades: 50
+  
+  # Generation constraints
+  max_iterations: 10  # Max attempts to improve a strategy
+  improvement_threshold: 0.05  # 5% improvement required to continue
+  
+  # Strategy types to explore
+  strategy_types:
+    - "trend_following"
+    - "mean_reversion"
+    - "breakout"
+    - "momentum"
+    - "sma_bounce"
+
+# Backtest Settings
+backtest:
+  # Date range (empty = maximum available)
+  start_date: ""
+  end_date: ""
+  
+  # Capital settings
+  initial_capital: 10000
+  position_size_pct: 100  # % of capital per trade
+  commission_pct: 0.06  # 0.06% per trade (typical crypto)
+  
+  # Risk management defaults
+  default_sl_atr_mult: 1.8
+  default_tp_rr: 2.0
+
+# Results Storage
+results:
+  output_dir: "./results"
+  save_screenshots: true
+  save_metrics_csv: true
+  save_strategy_versions: true
+
+# Logging
+logging:
+  level: "INFO"  # DEBUG, INFO, WARNING, ERROR
+  file: "./results/backtester.log"
