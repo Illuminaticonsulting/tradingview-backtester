@@ -21,10 +21,10 @@ from ..services.credential_vault import decrypt_credential
 from ..websocket.manager import broadcast_job_event
 
 # Import the existing backtester components
-from tv_backtester.agent import AutonomousAgent
-from tv_backtester.ai_generator import AIStrategyGenerator, StrategyRequest
-from tv_backtester.browser_controller import TradingViewBrowser
-from tv_backtester.metric_analyzer import MetricAnalyzer
+from src.tv_backtester.agent import AutonomousAgent
+from src.tv_backtester.ai_generator import AIStrategyGenerator, StrategyRequest
+from src.tv_backtester.browser_controller import TradingViewBrowser
+from src.tv_backtester.metric_analyzer import MetricAnalyzer
 
 logger = logging.getLogger(__name__)
 settings = get_settings()
